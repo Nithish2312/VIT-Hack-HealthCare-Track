@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--Bootstrap-->
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css"
+      integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX"
+      crossorigin="anonymous"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <!-- <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script> -->
+    <script
+      src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"
+      integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"
+      integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      $(document).ready(function () {
+        $("body").bootstrapMaterialDesign();
+      });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/home.css" />
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script>
+    <title>COVID19</title>
+  </head>
+
+  <body>
+    <nav class="nav">
+      <div class="container_nav">
+        <div class="logo">
+          <a href="home.html" class="affix2 navbar-brand">COVID19</a>
+        </div>
+        <div id="mainListDiv" class="main_list">
+          <ul class="navlinks">
+            <li><a href="home.html" class="affix2">Home</a></li>
+            <li><a href="notification.html" class="affix2">Notification</a></li>
+            <li><a href="contacts.html" class="affix2">Contacts</a></li>
+            <li><a href="#" class="affix2">#</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <section class="boxs">
+      <script>
+        $.getJSON("https://api.rootnet.in/covid19-in/notifications", function (
+          data1
+        ) {
+          var text = `
+          <h1>Notifications</h1><br>
+                      <h3> <a href=" ${data1.data.notifications[0].link}" target="_blank" style="color:#4285f4">${data1.data.notifications[0].title}<br></a></h3>
+                        <br>
+                        <h3> <a href=" ${data1.data.notifications[1].link}" target="_blank" style="color:#4285f4">${data1.data.notifications[1].title}<br></a></h3>
+                        <br>
+                        <h3> <a href=" ${data1.data.notifications[2].link}" target="_blank" style="color:#4285f4">${data1.data.notifications[2].title}<br></a></h3>
+                        <br>
+                        <h3> <a href=" ${data1.data.notifications[3].link}" target="_blank" style="color:#4285f4">${data1.data.notifications[3].title}<br></a></h3>
+
+                            `;
+          $(".myp").html(text);
+        });
+        var st;
+        $.ajax({
+          url: "https://geolocation-db.com/jsonp",
+          jsonpCallback: "callback",
+          dataType: "jsonp",
+          type: "GET",
+          success: myCallback,
+        });
+        function myCallback(response) {
+          st = response.state;
+          // Do whatever you need with result variable
+          $.getJSON("https://api.rootnet.in/covid19-in/contacts", function (
+            data1
+          ) {
+            var h = "number-tollfree";
+            var text = `
+            <h3>Toll-Free Number: <a href="tel:  ${data1.data.contacts.primary["number"]}" style="color:#4285f4"> ${data1.data.contacts.primary["number"]}</a></h3>
+                            <h3>Toll-Free Number: <a href="tel:  ${data1.data.contacts.primary["number-tollfree"]}" style="color:#4285f4"> ${data1.data.contacts.primary["number-tollfree"]}</a></h3>`;
+
+            var te = `<a href=${data1.data.contacts.primary["facebook"]} target="_blank" ><i class="fab fa-facebook"></i></a>
+                                      <a href="${data1.data.contacts.primary["twitter"]}"" target="_blank"><i class="fab fa-twitter"></i></a>
+                                      <a href="mailto:${data1.data.contacts.primary["email"]}" target="_blank"><i class="fa fa-envelope"></i></a>
+                                      <a href=${data1.data.contacts.primary["media"][0]} target="_blank"><i class="fa fa-newspaper-o"></i></a>`;
+            var t = ``;
+            for (let r of data1.data.contacts.regional) {
+              if (r.loc == st) {
+                t += `<h3> ${r.loc}</h3>
+                                  <h3>Number: <a href="tel: ${r.number}" style="color:#4285f4">${r.number}</a></h3>
+                                  `;
+              }
+            }
+            $(".mypanel1").html(text);
+            $(".social").html(te);
+
+            $(".mypanel2").html(t);
+          });
+        }
+      </script>
+      <div class="box myp"></div>
+      <div class="line"></div>
+
+      <section class="details">
+        <div class="card-body mypanel1"></div>
+        <br />
+        <br />
+        <div class="Social-media social"></div>
+        <br /><br />
+        <div class="card-body mypanel2"></div>
+      </section>
+    </section>
+    <h1>
+      <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+      <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+    </h1>
+    <script src="js/home.js"></script>
+    <!-- Footer -->
+    <footer class="bg-dark text-white mt-5 p-4 text-center">
+      <h3>VIT HACK &copy 2020</h3>
+    </footer>
+  </body>
+</html>
